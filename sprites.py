@@ -18,7 +18,7 @@ class PlayerSprite(arcade.SpriteCircle):
         elif self.center_y > SCREEN_HEIGHT - self.height / 2:
             self.center_y = SCREEN_HEIGHT - self.height / 2
 
-
+#Author: Santoniche from open game art
 class OvenSprite(arcade.Sprite):
     def __init__(self):
         super().__init__("resources/oven.png")
@@ -37,7 +37,7 @@ class OvenSprite(arcade.Sprite):
     def cook(self, food):
         food.cook()
 
-
+#Author: Santoniche from open game art
 class FoodTableSprite(arcade.Sprite):
     def __init__(self):
         super().__init__("resources/food_table_egg.png")
