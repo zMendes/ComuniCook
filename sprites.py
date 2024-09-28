@@ -3,16 +3,36 @@ import math
 from random import random
 from constants import *
 
-
-class PlayerSprite(arcade.SpriteCircle):
+class PlayerSprite(arcade.Sprite):
     def __init__(self, posX):
-        super().__init__(RADIUS, arcade.color.BLUE)
+        super().__init__()
+        #load character tileset
+        self.sprites = arcade.load_spritesheet("resources/player_tile.png", 20, 32, 3, 12)
+        self.texture = self.sprites[0]
+        self.scale = 2
         self.center_x = posX
         self.center_y = SCREEN_HEIGHT / 2
         self.change_y = 0
 
+    def update_movement_texture(self):
+        """Change the texture based on movement."""
+        if self.change_y > 0:
+            # Moving up
+            self.texture = self.sprites[MOVE_UP_TEXTURE_INDEX]
+        elif self.change_y < 0:
+            # Moving down
+            self.texture = self.sprites[MOVE_DOWN_TEXTURE_INDEX]
+        elif self.change_x > 0:
+            self.texture = self.sprites[MOVE_RIGHT_TEXTURE_INDEX]
+        elif self.change_x < 0:
+            self.texture = self.sprites[MOVE_LEFT_TEXTURE_INDEX]
+        else:
+            # No movement (idle)
+            self.texture = self.sprites[IDLE_TEXTURE_INDEX]
+
     def on_update(self, delta_time):
         self.update()
+        self.update_movement_texture()
         if self.center_y < self.height / 2:
             self.center_y = self.height / 2
         elif self.center_y > SCREEN_HEIGHT - self.height / 2:
