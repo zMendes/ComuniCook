@@ -7,10 +7,8 @@ class Restaurant:
     def get_money(self):
         return self.money
     def get_top_queue(self):
-        print(len(self.queue[-5:]))
         return self.queue[-5:]
     def add_to_queue(self, person):
-        print("added to queue")
         self.queue.append(person)
     def give_food(self):
         for plate_table in self.plate_tables:

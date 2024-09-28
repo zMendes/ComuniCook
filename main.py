@@ -72,7 +72,6 @@ class ComuniCook(arcade.View):
         )}", 20, SCREEN_HEIGHT - 30, arcade.color.WHITE, 14)
 
     def draw_hunger(self):
-        print(len(self.restaurant.get_top_queue()))
         for i, person in enumerate(self.restaurant.get_top_queue()):
             arcade.draw_text(f"{i+1}: {math.floor(person.hunger)}",
                              20, SCREEN_HEIGHT - 60 - i * 30, arcade.color.WHITE, 14)
