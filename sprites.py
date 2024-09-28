@@ -107,6 +107,13 @@ class PlateTableSprite(arcade.Sprite):
     def add_food(self, food):
         food.update_target(self)
         self.food = food
+    def has_food(self):
+        return self.food != None
+    def get_food(self):
+        #pop food
+        food = self.food
+        self.food = None
+        return food
     def serve(self, comunity):
         if self.food:
             comunity.giveFood(self.food)

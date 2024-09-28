@@ -2,11 +2,12 @@ import random
 
 
 class Comunity():
-    def __init__(self):
+    def __init__(self, restaurant):
         self.people = []
         for _ in range(random.randint(2, 5)):
             self.people.append(Person())
         self.happiness = 100
+        self.restaurant = restaurant
 
     def update(self, delta_time):
         self.try_add_person()
@@ -15,6 +16,7 @@ class Comunity():
             if person.hunger > 100:
                 self.people.remove(person)
                 del person
+            person.try_to_join_queue(self.restaurant)
         self.update_happiness()
 
     def try_add_person(self):
@@ -40,21 +42,19 @@ class Comunity():
     def get_size(self):
         return len(self.people)
 
-    def get_5most_hungry(self):
-        return sorted(self.people, key=lambda x: x.hunger, reverse=True)[:5]
-
-    def giveFood(self, food):
-        hungriest = sorted(self.people, key=lambda x: x.hunger, reverse=True)[0]
-        hungriest.eat(food)
-
-
-
-
 class Person():
     def __init__(self):
         self.hunger = random.randint(0, 80)
+        self.is_on_queue = False
 
     def eat(self, food):
         self.hunger = 0
         food.kill()
         food = None
+
+    def try_to_join_queue(self, restaurant):
+        if self.is_on_queue:
+            return
+        if random.random() * self.hunger > 50:
+            self.is_on_queue = True
+            restaurant.add_to_queue(self)

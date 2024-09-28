@@ -6,6 +6,7 @@ from sprites import PlayerSprite, OvenSprite, FoodTableSprite, Food, PlateTableS
 from constants import *
 from views import MenuView
 from agent import Comunity
+from restaurant import Restaurant
 
 
 class ComuniCook(arcade.View):
@@ -26,14 +27,14 @@ class ComuniCook(arcade.View):
         self.entities.append(self.plate_table)
 
         # Game state
-        self.money = 0
-        self.comunity = Comunity()
+        self.restaurant = Restaurant([self.plate_table])
+        self.comunity = Comunity(self.restaurant)
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.player, self.entities)
         self.setup()
         #others
         self.food = None
-    
+
     def setup(self):
         self.walls = arcade.SpriteList()
         left_wall = arcade.SpriteSolidColor(10, SCREEN_HEIGHT, arcade.color.BLACK)
@@ -63,7 +64,7 @@ class ComuniCook(arcade.View):
 
     def draw_UI(self):
         arcade.draw_text(f"Money: {math.floor(
-            self.money)}", SCREEN_WIDTH - 120, SCREEN_HEIGHT - 30, arcade.color.WHITE, 14)
+            self.restaurant.get_money())}", SCREEN_WIDTH - 120, SCREEN_HEIGHT - 30, arcade.color.WHITE, 14)
         arcade.draw_text(f"Comunity: {self.comunity.get_size(
         )} people", SCREEN_WIDTH - 500, SCREEN_HEIGHT - 30, arcade.color.WHITE, 14)
         self.draw_hunger()
@@ -71,7 +72,8 @@ class ComuniCook(arcade.View):
         )}", 20, SCREEN_HEIGHT - 30, arcade.color.WHITE, 14)
 
     def draw_hunger(self):
-        for i, person in enumerate(self.comunity.get_5most_hungry()):
+        print(len(self.restaurant.get_top_queue()))
+        for i, person in enumerate(self.restaurant.get_top_queue()):
             arcade.draw_text(f"{i+1}: {math.floor(person.hunger)}",
                              20, SCREEN_HEIGHT - 60 - i * 30, arcade.color.WHITE, 14)
 
@@ -79,9 +81,7 @@ class ComuniCook(arcade.View):
     def on_update(self, delta_time):
         self.entities.on_update(delta_time)
         self.comunity.update(delta_time)
-        self.money += 0.2 * delta_time * self.comunity.get_size()
-
-        self.give_food()
+        self.restaurant.update(delta_time)
 
         if self.food:
             self.food.on_update(delta_time)
@@ -130,11 +130,6 @@ class ComuniCook(arcade.View):
             self.player, self.plate_table)
         if distance_to_plate_table < proximity_threshold and self.food:
             self.plate_table.add_food(self.food)
-
-
-    def give_food(self):
-        self.plate_table.serve(self.comunity)
-
 
 if __name__ == '__main__':
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
