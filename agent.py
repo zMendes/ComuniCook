@@ -16,8 +16,21 @@ class Comunity():
             if person.hunger > 100:
                 self.people.remove(person)
                 del person
-            person.try_to_join_queue(self.restaurant)
+            if person.try_to_join_queue(self.restaurant):
+                self.is_someone_giving_position()
         self.update_happiness()
+
+    def is_someone_giving_position(self):
+        """Check if there is someone willing to change position in the queue to make it shorter"""
+        queue = self.restaurant.queue
+        current_person = queue[-1]
+        i = len(queue) - 1
+        for j in range(0, i):
+            next_person = queue[j]
+            if next_person.hunger < current_person.hunger and random.random() < 0.5:
+                print(f"Person with hunger {current_person.hunger} gets position of person with hunger {next_person.hunger}")
+                queue[i], queue[j] = queue[j], queue[i]
+                return
 
     def try_add_person(self):
         if random.random() < 0.0001 * self.happiness/10: #this ration seems good enough for now
@@ -48,13 +61,15 @@ class Person():
         self.is_on_queue = False
 
     def eat(self, food):
-        self.hunger = 0
+        self.hunger -= food.nutrition
         food.kill()
         food = None
 
     def try_to_join_queue(self, restaurant):
         if self.is_on_queue:
-            return
+            return False
         if random.random() * self.hunger > 50:
             self.is_on_queue = True
             restaurant.add_to_queue(self)
+            return True
+        return False

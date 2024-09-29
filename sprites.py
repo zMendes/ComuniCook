@@ -77,6 +77,7 @@ class Food(arcade.Sprite):
         self.center_x = self.target.center_x
         self.center_y = self.target.center_y
         self.cooked = False
+        self.nutrition = 40
 
     def on_update(self, delta_time):
         self.update()
@@ -87,6 +88,7 @@ class Food(arcade.Sprite):
     def cook(self):
         self.set_texture(0)
         self.texture = arcade.load_texture("resources/egg_fried.png")
+        self.nutrition = 60
 
     def update_target(self, target):
         self.target = target

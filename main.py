@@ -32,24 +32,28 @@ class ComuniCook(arcade.View):
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.player, self.entities)
         self.setup()
-        #others
+        # others
         self.food = None
 
     def setup(self):
         self.walls = arcade.SpriteList()
-        left_wall = arcade.SpriteSolidColor(10, SCREEN_HEIGHT, arcade.color.BLACK)
+        left_wall = arcade.SpriteSolidColor(
+            10, SCREEN_HEIGHT, arcade.color.BLACK)
         left_wall.center_x = 0
         left_wall.center_y = SCREEN_HEIGHT / 2
         self.walls.append(left_wall)
-        right_wall = arcade.SpriteSolidColor(10, SCREEN_HEIGHT, arcade.color.BLACK)
+        right_wall = arcade.SpriteSolidColor(
+            10, SCREEN_HEIGHT, arcade.color.BLACK)
         right_wall.center_x = SCREEN_WIDTH
         right_wall.center_y = SCREEN_HEIGHT / 2
         self.walls.append(right_wall)
-        top_wall = arcade.SpriteSolidColor(SCREEN_WIDTH, 12, arcade.color.BLACK)
+        top_wall = arcade.SpriteSolidColor(
+            SCREEN_WIDTH, 12, arcade.color.BLACK)
         top_wall.center_x = SCREEN_WIDTH / 2
         top_wall.center_y = SCREEN_HEIGHT
         self.walls.append(top_wall)
-        bottom_wall = arcade.SpriteSolidColor(SCREEN_WIDTH, 12, arcade.color.BLACK)
+        bottom_wall = arcade.SpriteSolidColor(
+            SCREEN_WIDTH, 12, arcade.color.BLACK)
         bottom_wall.center_x = SCREEN_WIDTH / 2
         bottom_wall.center_y = 0
         self.walls.append(bottom_wall)
@@ -70,6 +74,8 @@ class ComuniCook(arcade.View):
         self.draw_hunger()
         arcade.draw_text(f"Happiness: {self.comunity.get_happiness(
         )}", 20, SCREEN_HEIGHT - 30, arcade.color.WHITE, 14)
+        arcade.draw_text(
+            f"Queue: {self.restaurant.get_queue_size()}", SCREEN_WIDTH/2, SCREEN_HEIGHT- 30, arcade.color.WHITE, 14)
 
     def draw_hunger(self):
         for i, person in enumerate(self.restaurant.get_top_queue()):
@@ -104,6 +110,8 @@ class ComuniCook(arcade.View):
             self.window.show_view(menu_view)
         elif key == arcade.key.SPACE:
             self.interact()
+        elif key == arcade.key.ESCAPE:
+            arcade.close_window()
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -112,7 +120,7 @@ class ComuniCook(arcade.View):
         elif key == arcade.key.A or key == arcade.key.D:
             self.player.change_x = 0
 
-    def interact(self): #not the best way to do this
+    def interact(self):  # not the best way to do this
 
         proximity_threshold = 90
         distance_to_oven = arcade.get_distance_between_sprites(
