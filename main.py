@@ -15,19 +15,25 @@ class ComuniCook(arcade.View):
         # set up the window
         arcade.set_background_color(arcade.color.GRAY)
 
-        # set up sprites
+        # set up obj lists
         self.entities = arcade.SpriteList()
+        self.ovens = []
+        self.plate_tables = []
+        # create objects
         self.oven = OvenSprite()
-        self.entities.append(self.oven)
-        self.player = PlayerSprite(100)
-        self.entities.append(self.player)
         self.food_table = FoodTableSprite()
+        self.player = PlayerSprite(100)
+        plate_table = PlateTableSprite(50, 70)
+        # add objects to lists
+        self.entities.append(self.oven)
+        self.entities.append(self.player)
         self.entities.append(self.food_table)
-        self.plate_table = PlateTableSprite(50, 70)
-        self.entities.append(self.plate_table)
+        self.entities.append(plate_table)
+        self.ovens.append(self.oven)
+        self.plate_tables.append(plate_table)
 
         # Game state
-        self.restaurant = Restaurant([self.plate_table])
+        self.restaurant = Restaurant(self.plate_tables)
         self.comunity = Comunity(self.restaurant)
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.player, self.entities)
@@ -75,7 +81,7 @@ class ComuniCook(arcade.View):
         arcade.draw_text(f"Happiness: {self.comunity.get_happiness(
         )}", 20, SCREEN_HEIGHT - 30, arcade.color.WHITE, 14)
         arcade.draw_text(
-            f"Queue: {self.restaurant.get_queue_size()}", SCREEN_WIDTH/2, SCREEN_HEIGHT- 30, arcade.color.WHITE, 14)
+            f"Queue: {self.restaurant.get_queue_size()}", SCREEN_WIDTH/2, SCREEN_HEIGHT - 30, arcade.color.WHITE, 14)
 
     def draw_hunger(self):
         for i, person in enumerate(self.restaurant.get_top_queue()):
@@ -97,13 +103,13 @@ class ComuniCook(arcade.View):
         """Called whenever a key is pressed. """
 
         # If the player presses a key, update the speed
-        if key == arcade.key.W:
+        if key == arcade.key.UP:
             self.player.change_y = MOVEMENT_SPEED
-        elif key == arcade.key.S:
+        elif key == arcade.key.DOWN:
             self.player.change_y = -MOVEMENT_SPEED
-        elif key == arcade.key.A:
+        elif key == arcade.key.LEFT:
             self.player.change_x = -MOVEMENT_SPEED
-        elif key == arcade.key.D:
+        elif key == arcade.key.RIGHT:
             self.player.change_x = MOVEMENT_SPEED
         elif key == arcade.key.M:
             menu_view = MenuView(self)
@@ -115,28 +121,43 @@ class ComuniCook(arcade.View):
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
-        if key == arcade.key.W or key == arcade.key.S:
+        if key == arcade.key.UP or key == arcade.key.DOWN:
             self.player.change_y = 0
-        elif key == arcade.key.A or key == arcade.key.D:
+        elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
             self.player.change_x = 0
 
     def interact(self):  # not the best way to do this
-
         proximity_threshold = 90
-        distance_to_oven = arcade.get_distance_between_sprites(
-            self.player, self.oven)
-        if distance_to_oven < proximity_threshold:
-            if (self.food):
-                self.oven.cook(self.food)
+
+        for oven in self.ovens:
+            distance_to_oven = arcade.get_distance_between_sprites(
+                self.player, oven)
+            if distance_to_oven < proximity_threshold and self.food:
+                oven.cook(self.food)
+                break
+
         distance_to_food_table = arcade.get_distance_between_sprites(
             self.player, self.food_table)
         if distance_to_food_table < proximity_threshold:
             self.food = Food(self.player)
 
-        distance_to_plate_table = arcade.get_distance_between_sprites(
-            self.player, self.plate_table)
-        if distance_to_plate_table < proximity_threshold and self.food:
-            self.plate_table.add_food(self.food)
+        for plate_table in self.plate_tables:
+            distance_to_plate_table = arcade.get_distance_between_sprites(
+                self.player, plate_table)
+            if distance_to_plate_table < proximity_threshold and self.food:
+                plate_table.add_food(self.food)
+                break
+
+    def buy_plate_table(self):
+        y = self.plate_tables[-1].center_y + 160
+        x = self.plate_tables[-1].center_x
+        if y > SCREEN_HEIGHT - 100:
+            y = self.plate_tables[0].center_y
+            x = self.plate_tables[0].center_x + 160
+        plate_table = PlateTableSprite(x, y)
+        self.entities.append(plate_table)
+        self.plate_tables.append(plate_table)
+
 
 if __name__ == '__main__':
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
