@@ -19,16 +19,16 @@ class ComuniCook(arcade.View):
         self.ovens = []
         self.plate_tables = []
         # create objects
-        self.oven = Oven(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        oven = Oven(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         self.food_table = FoodTable()
         self.player = Player(100)
         plate_table = PlateTable(50, 70)
         # add objects to lists
-        self.entities.append(self.oven)
+        self.entities.append(oven)
         self.entities.append(self.player)
         self.entities.append(self.food_table)
         self.entities.append(plate_table)
-        self.ovens.append(self.oven)
+        self.ovens.append(oven)
         self.plate_tables.append(plate_table)
 
         # Game state
@@ -38,7 +38,7 @@ class ComuniCook(arcade.View):
             self.player, self.entities)
         self.setup()
         # others
-        self.food = None
+        self.foods = arcade.SpriteList()
 
     def setup(self):
         self.walls = arcade.SpriteList()
@@ -67,9 +67,8 @@ class ComuniCook(arcade.View):
     def on_draw(self):
         arcade.start_render()
         self.entities.draw()
+        self.foods.draw()
         self.draw_UI()
-        if self.food:
-            self.food.draw()
 
     def draw_UI(self):
         arcade.draw_text(f"Money: {math.floor(
@@ -92,9 +91,7 @@ class ComuniCook(arcade.View):
         self.entities.on_update(delta_time)
         self.comunity.update(delta_time)
         self.restaurant.update(delta_time)
-
-        if self.food:
-            self.food.on_update(delta_time)
+        self.foods.on_update(delta_time)
 
         self.physics_engine.update()
 
@@ -134,51 +131,46 @@ class ComuniCook(arcade.View):
             if distance_to_oven < proximity_threshold and self.player.hasFood():
                 oven.cook(self.player.giveFood())
                 break
-            elif distance_to_oven < proximity_threshold and oven.is_ready:
-                self.player.receiveFood(self.oven.return_food(self.player))
+            elif distance_to_oven < proximity_threshold and oven.is_ready():
+                self.player.receiveFood(oven.return_food(self.player))
                 break
 
         distance_to_food_table = arcade.get_distance_between_sprites(
             self.player, self.food_table)
         if distance_to_food_table < proximity_threshold:
-            self.food = Food(self.player)
-            self.player.receiveFood(self.food)
+            self.foods.append(Food(self.player))
+            self.player.receiveFood(self.foods[-1])
 
         for plate_table in self.plate_tables:
             distance_to_plate_table = arcade.get_distance_between_sprites(
                 self.player, plate_table)
             if distance_to_plate_table < proximity_threshold and self.player.hasFood():
-                plate_table.add_food(self.food)
+                plate_table.add_food(self.player.giveFood())
                 break
 
     def buy(self, item):
-        #switch case with oven, super oven and plate table
+        if not self.restaurant.buy(item):
+            return
         match item:
             case Items.OVEN:
-                self.add_oven()
+                self.addItem(Oven, self.ovens)
             case Items.SUPER_OVEN:
-                self.add_super_oven()
+                self.addItem(SuperOven, self.ovens)
             case Items.PLATE_TABLE:
-                self.add_plate_table()
-    def add_oven(self):
-        y = self.ovens[-1].center_y + 130
-        x = self.ovens[-1].center_x
-        if y > SCREEN_HEIGHT - 100:
-            y = self.ovens[0].center_y
-            x = self.ovens[0].center_x + 160
-        oven = Oven(x, y)
-        self.entities.append(oven)
-        self.ovens.append(oven)
+                self.addItem(PlateTable, self.plate_tables)
 
-    def add_plate_table(self):
-        y = self.plate_tables[-1].center_y + 160
-        x = self.plate_tables[-1].center_x
+    def addItem(self, item, item_list):
+        if len(item_list) > 5:
+            return
+        y = item_list[-1].center_y + 160
+        x = item_list[-1].center_x
         if y > SCREEN_HEIGHT - 100:
-            y = self.plate_tables[0].center_y
-            x = self.plate_tables[0].center_x + 160
-        plate_table = PlateTable(x, y)
-        self.entities.append(plate_table)
-        self.plate_tables.append(plate_table)
+            y = item_list[len(item_list) -2% 3].center_y
+            x = item_list[len(item_list)-2 % 3].center_x + 160
+        item = item(x, y)
+        self.entities.append(item)
+        item_list.append(item)
+
 
 
 if __name__ == '__main__':

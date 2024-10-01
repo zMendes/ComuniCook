@@ -56,26 +56,26 @@ class Oven(arcade.Sprite):
         self.center_x = x
         self.center_y = y
         self.change_y = 0
-        self.scale = 1.5
+        self.scale = 1.2
         self.food = None
         self.oven_speed = 1
-        self.isCooking = False
+        self.is_cooking = False
 
     def on_update(self, delta_time):
-        if self.isCooking:
+        if self.is_cooking:
             self.cooking(delta_time)
 
     def cook(self, food):
         self.time_cooking = 0
         self.food = food
         food.update_target(self)
-        self.isCooking = True
+        self.is_cooking = True
 
     def cooking(self, delta_time):
         self.time_cooking += delta_time * self.oven_speed
         if self.time_cooking > self.food.time_to_cook:
             self.food.cook()
-            self.isCooking = False
+            self.is_cooking = False
 
     def return_food(self, person):
         food = self.food
@@ -84,12 +84,12 @@ class Oven(arcade.Sprite):
         return food
 
     def is_ready(self):
-        return self.isCooking == False and self.food != None
+        return self.is_cooking == False and self.food != None
 
 
 class SuperOven(Oven):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, x, y):
+        super().__init__(x,y)
         self.texture = arcade.load_texture("resources/super_oven.png")
         self.oven_speed = 3
 
@@ -100,7 +100,7 @@ class FoodTable(arcade.Sprite):  # from Bluerobin2 on open game art
         self.center_x = SCREEN_WIDTH - 32
         self.center_y = SCREEN_HEIGHT - 100
         self.change_y = 0
-        self.scale = 1.5
+        self.scale = 1
 
     def on_update(self, delta_time):
         self.update()

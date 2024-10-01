@@ -11,11 +11,11 @@ class MenuView(arcade.View):
         arcade.start_render()
         arcade.draw_text("Buy Items Menu", self.window.width / 2, self.window.height - 50,
                          arcade.color.WHITE, 24, anchor_x="center")
-        arcade.draw_text("O: Oven -- 100$", self.window.width / 2, self.window.height - 100,
+        arcade.draw_text("O: Oven -- 100$", self.window.width / 2, self.window.height - 200,
                          arcade.color.WHITE, 18, anchor_x="center")
-        arcade.draw_text("S: Super Oven -- 300$", self.window.width / 2, self.window.height - 100,
+        arcade.draw_text("S: Super Oven -- 300$", self.window.width / 2, self.window.height - 230,
                          arcade.color.WHITE, 18, anchor_x="center")
-        arcade.draw_text("P: Plates -- 200$", self.window.width / 2, self.window.height - 200,
+        arcade.draw_text("P: Plates -- 200$", self.window.width / 2, self.window.height - 260,
                          arcade.color.WHITE, 18, anchor_x="center")
 
     def on_key_press(self, key, modifiers):

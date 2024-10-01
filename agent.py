@@ -10,6 +10,7 @@ class Comunity():
         self.happiness = 100
         self.restaurant = restaurant
         self.time_since_last_check = 0
+        self.restaurant.set_community(self)
 
     def update(self, delta_time):
         self.try_add_person(delta_time)
@@ -58,8 +59,7 @@ class Comunity():
                     self.people.append(Person())
 
     def remove_person(self, person):
-        tprint("Person is leaving the community, whas she on the queue?",
-              person.is_on_queue)
+        tprint("Person is leaving the community")
         self.restaurant.remove_from_queue(person)
         self.people.remove(person)
 
