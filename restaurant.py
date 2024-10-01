@@ -33,7 +33,6 @@ class Restaurant:
             return
         for plate_table in self.plate_tables:
             if plate_table.has_food():
-                tprint("Top 5 queue:", [str(x) for x in self.get_top_queue()])
                 last_person = self.queue.pop(0)
                 tprint("Giving food to person with hunger:", last_person.hunger)
                 last_person.eat(plate_table.get_food())

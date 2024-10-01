@@ -2,6 +2,7 @@ import arcade
 import arcade.key
 from utils import Items
 
+
 class MenuView(arcade.View):
     def __init__(self, game_view):
         super().__init__()

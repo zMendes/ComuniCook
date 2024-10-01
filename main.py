@@ -8,6 +8,7 @@ from agent import Comunity
 from restaurant import Restaurant
 from utils import *
 
+
 class ComuniCook(arcade.View):
     def __init__(self):
         super().__init__()
@@ -37,6 +38,13 @@ class ComuniCook(arcade.View):
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.player, self.entities)
         self.setup()
+        # UI
+        self.money_text = None
+        self.comunity_text = None
+        self.happiness_text = None
+        self.queue_text = None
+        self.hunger_texts = []
+        self.create_UI_texts()
         # others
         self.foods = arcade.SpriteList()
 
@@ -64,35 +72,91 @@ class ComuniCook(arcade.View):
         self.walls.append(bottom_wall)
         self.entities.extend(self.walls)
 
+    def create_UI_texts(self):
+        self.money_text = arcade.Text(
+            text=f"Money: {math.floor(self.restaurant.get_money())}",
+            start_x=SCREEN_WIDTH - 120,
+            start_y=SCREEN_HEIGHT - 30,
+            color=arcade.color.WHITE,
+            font_size=14
+        )
+
+        self.comunity_text = arcade.Text(
+            text=f"Comunity: {self.comunity.get_size()} people",
+            start_x=SCREEN_WIDTH - 500,
+            start_y=SCREEN_HEIGHT - 30,
+            color=arcade.color.WHITE,
+            font_size=14
+        )
+
+        self.happiness_text = arcade.Text(
+            text=f"Happiness: {self.comunity.get_happiness()}",
+            start_x=20,
+            start_y=SCREEN_HEIGHT - 30,
+            color=arcade.color.WHITE,
+            font_size=14
+        )
+
+        self.queue_text = arcade.Text(
+            text=f"Queue: {self.restaurant.get_queue_size()}",
+            start_x=SCREEN_WIDTH / 2,
+            start_y=SCREEN_HEIGHT - 30,
+            color=arcade.color.WHITE,
+            font_size=14
+        )
+
+    def draw_UI(self):
+        # Draw all UI text objects
+        self.money_text.draw()
+        self.comunity_text.draw()
+        self.happiness_text.draw()
+        self.queue_text.draw()
+        self.draw_hunger()
+
+    def draw_hunger(self):
+        top_queue = self.restaurant.get_top_queue()
+
+        for i, person in enumerate(top_queue):
+            if i < len(self.hunger_texts):
+                self.hunger_texts[i].text = f"{
+                    i+1}: {math.floor(person.hunger)}"
+            else:
+                hunger_text = arcade.Text(
+                    text=f"{i+1}: {math.floor(person.hunger)}",
+                    start_x=20,
+                    start_y=SCREEN_HEIGHT - 60 - i * 30,
+                    color=arcade.color.WHITE,
+                    font_size=14
+                )
+                self.hunger_texts.append(hunger_text)
+
+        if len(self.hunger_texts) > len(top_queue):
+            self.hunger_texts = self.hunger_texts[:len(top_queue)]
+
+        for hunger_text in self.hunger_texts:
+            hunger_text.draw()
+
+    def update_UI_texts(self):
+        self.money_text.text = f"Money: {
+            math.floor(self.restaurant.get_money())}"
+        self.comunity_text.text = f"Comunity: {
+            self.comunity.get_size()} people"
+        self.happiness_text.text = f"Happiness: {
+            self.comunity.get_happiness()}"
+        self.queue_text.text = f"Queue: {self.restaurant.get_queue_size()}"
+
     def on_draw(self):
         arcade.start_render()
         self.entities.draw()
         self.foods.draw()
         self.draw_UI()
 
-    def draw_UI(self):
-        arcade.draw_text(f"Money: {math.floor(
-            self.restaurant.get_money())}", SCREEN_WIDTH - 120, SCREEN_HEIGHT - 30, arcade.color.WHITE, 14)
-        arcade.draw_text(f"Comunity: {self.comunity.get_size(
-        )} people", SCREEN_WIDTH - 500, SCREEN_HEIGHT - 30, arcade.color.WHITE, 14)
-        self.draw_hunger()
-        arcade.draw_text(f"Happiness: {self.comunity.get_happiness(
-        )}", 20, SCREEN_HEIGHT - 30, arcade.color.WHITE, 14)
-        arcade.draw_text(
-            f"Queue: {self.restaurant.get_queue_size()}", SCREEN_WIDTH/2, SCREEN_HEIGHT - 30, arcade.color.WHITE, 14)
-
-    def draw_hunger(self):
-        for i, person in enumerate(self.restaurant.get_top_queue()):
-            arcade.draw_text(f"{i+1}: {math.floor(person.hunger)}",
-                             20, SCREEN_HEIGHT - 60 - i * 30, arcade.color.WHITE, 14)
-
-    # called 60 times per second to update game state
     def on_update(self, delta_time):
         self.entities.on_update(delta_time)
         self.comunity.update(delta_time)
         self.restaurant.update(delta_time)
         self.foods.on_update(delta_time)
-
+        self.update_UI_texts()
         self.physics_engine.update()
 
     def on_key_press(self, key, modifiers):
@@ -124,29 +188,24 @@ class ComuniCook(arcade.View):
 
     def interact(self):  # not the best way to do this
         proximity_threshold = 90
-
-        for oven in self.ovens:
-            distance_to_oven = arcade.get_distance_between_sprites(
-                self.player, oven)
-            if distance_to_oven < proximity_threshold and self.player.hasFood():
-                oven.cook(self.player.giveFood())
-                break
-            elif distance_to_oven < proximity_threshold and oven.is_ready():
-                self.player.receiveFood(oven.return_food(self.player))
-                break
-
-        distance_to_food_table = arcade.get_distance_between_sprites(
-            self.player, self.food_table)
-        if distance_to_food_table < proximity_threshold:
-            self.foods.append(Food(self.player))
-            self.player.receiveFood(self.foods[-1])
-
-        for plate_table in self.plate_tables:
-            distance_to_plate_table = arcade.get_distance_between_sprites(
-                self.player, plate_table)
-            if distance_to_plate_table < proximity_threshold and self.player.hasFood():
-                plate_table.add_food(self.player.giveFood())
-                break
+        objects = self.ovens + [self.food_table] + self.plate_tables
+        for obj in objects:
+            distance = arcade.get_distance_between_sprites(self.player, obj)
+            if distance < proximity_threshold:
+                if isinstance(obj, Oven):
+                    if self.player.hasFood():
+                        obj.cook(self.player.giveFood())
+                    elif obj.is_ready():
+                        self.player.receiveFood(obj.return_food(self.player))
+                    break
+                elif isinstance(obj, FoodTable):
+                    self.foods.append(Food(self.player))
+                    self.player.receiveFood(self.foods[-1])
+                    break
+                elif isinstance(obj, PlateTable):
+                    if self.player.hasFood():
+                        obj.add_food(self.player.giveFood())
+                    break
 
     def buy(self, item):
         if not self.restaurant.buy(item):
@@ -159,18 +218,22 @@ class ComuniCook(arcade.View):
             case Items.PLATE_TABLE:
                 self.addItem(PlateTable, self.plate_tables)
 
-    def addItem(self, item, item_list):
-        if len(item_list) > 5:
-            return
-        y = item_list[-1].center_y + 160
-        x = item_list[-1].center_x
-        if y > SCREEN_HEIGHT - 100:
-            y = item_list[len(item_list) -2% 3].center_y
-            x = item_list[len(item_list)-2 % 3].center_x + 160
-        item = item(x, y)
-        self.entities.append(item)
-        item_list.append(item)
 
+def addItem(self, item, item_list):
+    if len(item_list) > 5:
+        return
+    last_item = item_list[-1]
+    new_x = last_item.center_x
+    new_y = last_item.center_y + 160
+
+    if new_y > SCREEN_HEIGHT - 100:
+        new_row_item = item_list[len(item_list) - 2 % 3]
+        new_x = new_row_item.center_x + 160
+        new_y = new_row_item.center_y
+
+    new_item = item(new_x, new_y)
+    self.entities.append(new_item)
+    item_list.append(new_item)
 
 
 if __name__ == '__main__':

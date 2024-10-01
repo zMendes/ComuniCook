@@ -89,7 +89,7 @@ class Oven(arcade.Sprite):
 
 class SuperOven(Oven):
     def __init__(self, x, y):
-        super().__init__(x,y)
+        super().__init__(x, y)
         self.texture = arcade.load_texture("resources/super_oven.png")
         self.oven_speed = 3
 

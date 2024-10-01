@@ -2,6 +2,7 @@ import random
 from utils import tprint
 from constants import INITIAL_COMUNITY_SIZE
 
+
 class Comunity():
     def __init__(self, restaurant):
         self.people = []
@@ -18,7 +19,6 @@ class Comunity():
             person.hunger += 1 * delta_time
             if person.hunger > 100:
                 self.remove_person(person)
-                del person
             elif person.try_to_join_queue(self.restaurant, delta_time):
                 self.is_someone_giving_position()
         self.update_happiness()
@@ -38,7 +38,7 @@ class Comunity():
 
                 if random.random() < swap_probability:
                     tprint(f"Person with hunger {
-                          current_person.hunger} gets position of person with hunger {next_person.hunger}")
+                           current_person.hunger} gets position of person with hunger {next_person.hunger}")
                     queue[i], queue[j] = queue[j], queue[i]
                     return
 
@@ -64,9 +64,10 @@ class Comunity():
         self.people.remove(person)
 
     def update_happiness(self):
-        self.happiness = 120 - \
-            sum([person.hunger for person in self.people]) / \
-            len(self.people) if len(self.people) > 0 else 0
+        if self.time_since_last_check >= 2:
+            self.happiness = 120 - \
+                sum(person.hunger for person in self.people) / \
+                len(self.people) if len(self.people) > 0 else 0
 
     def get_happiness(self):
         match = {
@@ -89,6 +90,7 @@ class Person():
         self.hunger = random.randint(0, 80)
         self.is_on_queue = False
         self.time_since_last_try = 0
+
     def __str__(self):
         return f"Person - {self.hunger} - {self.is_on_queue}"
 
@@ -115,7 +117,7 @@ class Person():
 
         if random.random() < join_probability:
             tprint("Person with hunger", self.hunger,
-                  "decides to join the queue")
+                   "decides to join the queue")
             self.is_on_queue = True
             restaurant.add_to_queue(self)
             return True
