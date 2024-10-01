@@ -131,19 +131,23 @@ class ComuniCook(arcade.View):
         for oven in self.ovens:
             distance_to_oven = arcade.get_distance_between_sprites(
                 self.player, oven)
-            if distance_to_oven < proximity_threshold and self.food:
-                oven.cook(self.food)
+            if distance_to_oven < proximity_threshold and self.player.hasFood():
+                oven.cook(self.player.giveFood())
+                break
+            elif distance_to_oven < proximity_threshold and oven.is_ready:
+                self.player.receiveFood(self.oven.return_food(self.player))
                 break
 
         distance_to_food_table = arcade.get_distance_between_sprites(
             self.player, self.food_table)
         if distance_to_food_table < proximity_threshold:
             self.food = Food(self.player)
+            self.player.receiveFood(self.food)
 
         for plate_table in self.plate_tables:
             distance_to_plate_table = arcade.get_distance_between_sprites(
                 self.player, plate_table)
-            if distance_to_plate_table < proximity_threshold and self.food:
+            if distance_to_plate_table < proximity_threshold and self.player.hasFood():
                 plate_table.add_food(self.food)
                 break
 
