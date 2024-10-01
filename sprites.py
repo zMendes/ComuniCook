@@ -4,7 +4,7 @@ from random import random
 from constants import *
 
 
-class PlayerSprite(arcade.Sprite):
+class Player(arcade.Sprite):
     def __init__(self, posX):
         super().__init__()
         # load character tileset
@@ -50,11 +50,11 @@ class PlayerSprite(arcade.Sprite):
 # Author: Santoniche from open game art
 
 
-class OvenSprite(arcade.Sprite):
-    def __init__(self):
+class Oven(arcade.Sprite):
+    def __init__(self, x, y):
         super().__init__("resources/oven.png")
-        self.center_x = SCREEN_WIDTH / 2
-        self.center_y = SCREEN_HEIGHT / 2
+        self.center_x = x
+        self.center_y = y
         self.change_y = 0
         self.scale = 1.5
         self.food = None
@@ -87,7 +87,14 @@ class OvenSprite(arcade.Sprite):
         return self.isCooking == False and self.food != None
 
 
-class FoodTableSprite(arcade.Sprite):  # from Bluerobin2 on open game art
+class SuperOven(Oven):
+    def __init__(self):
+        super().__init__()
+        self.texture = arcade.load_texture("resources/super_oven.png")
+        self.oven_speed = 3
+
+
+class FoodTable(arcade.Sprite):  # from Bluerobin2 on open game art
     def __init__(self):
         super().__init__("resources/tabletop_egg.png")
         self.center_x = SCREEN_WIDTH - 32
@@ -124,7 +131,7 @@ class Food(arcade.Sprite):  # Food resources credit to ghostpixxells on itch.io
         self.target = target
 
 
-class PlateTableSprite(arcade.Sprite):  # from Bluerobin2 on open game art
+class PlateTable(arcade.Sprite):  # from Bluerobin2 on open game art
     def __init__(self, x, y):
         super().__init__("resources/tabletop_plate.png")
         self.center_x = x

@@ -1,7 +1,7 @@
 import arcade
 import arcade.key
 import math
-from sprites import PlayerSprite, OvenSprite, FoodTableSprite, Food, PlateTableSprite
+from sprites import *
 from constants import *
 from views import MenuView
 from agent import Comunity
@@ -19,10 +19,10 @@ class ComuniCook(arcade.View):
         self.ovens = []
         self.plate_tables = []
         # create objects
-        self.oven = OvenSprite()
-        self.food_table = FoodTableSprite()
-        self.player = PlayerSprite(100)
-        plate_table = PlateTableSprite(50, 70)
+        self.oven = Oven(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        self.food_table = FoodTable()
+        self.player = Player(100)
+        plate_table = PlateTable(50, 70)
         # add objects to lists
         self.entities.append(self.oven)
         self.entities.append(self.player)
@@ -151,13 +151,32 @@ class ComuniCook(arcade.View):
                 plate_table.add_food(self.food)
                 break
 
-    def buy_plate_table(self):
+    def buy(self, item):
+        #switch case with oven, super oven and plate table
+        match item:
+            case Items.OVEN:
+                self.add_oven()
+            case Items.SUPER_OVEN:
+                self.add_super_oven()
+            case Items.PLATE_TABLE:
+                self.add_plate_table()
+    def add_oven(self):
+        y = self.ovens[-1].center_y + 130
+        x = self.ovens[-1].center_x
+        if y > SCREEN_HEIGHT - 100:
+            y = self.ovens[0].center_y
+            x = self.ovens[0].center_x + 160
+        oven = Oven(x, y)
+        self.entities.append(oven)
+        self.ovens.append(oven)
+
+    def add_plate_table(self):
         y = self.plate_tables[-1].center_y + 160
         x = self.plate_tables[-1].center_x
         if y > SCREEN_HEIGHT - 100:
             y = self.plate_tables[0].center_y
             x = self.plate_tables[0].center_x + 160
-        plate_table = PlateTableSprite(x, y)
+        plate_table = PlateTable(x, y)
         self.entities.append(plate_table)
         self.plate_tables.append(plate_table)
 

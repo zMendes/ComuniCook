@@ -1,6 +1,6 @@
 import arcade
 import arcade.key
-
+from utils import Items
 
 class MenuView(arcade.View):
     def __init__(self, game_view):
@@ -11,9 +11,11 @@ class MenuView(arcade.View):
         arcade.start_render()
         arcade.draw_text("Buy Items Menu", self.window.width / 2, self.window.height - 50,
                          arcade.color.WHITE, 24, anchor_x="center")
-        arcade.draw_text("O: Oven -- 100 points", self.window.width / 2, self.window.height - 100,
+        arcade.draw_text("O: Oven -- 100$", self.window.width / 2, self.window.height - 100,
                          arcade.color.WHITE, 18, anchor_x="center")
-        arcade.draw_text("P: Plates -- 150 points", self.window.width / 2, self.window.height - 200,
+        arcade.draw_text("S: Super Oven -- 300$", self.window.width / 2, self.window.height - 100,
+                         arcade.color.WHITE, 18, anchor_x="center")
+        arcade.draw_text("P: Plates -- 200$", self.window.width / 2, self.window.height - 200,
                          arcade.color.WHITE, 18, anchor_x="center")
 
     def on_key_press(self, key, modifiers):
@@ -21,8 +23,11 @@ class MenuView(arcade.View):
         if key == arcade.key.ESCAPE or key == arcade.key.M:
             self.window.show_view(self.game_view)
         if key == arcade.key.O:
-            self.game_view.restaurant.buy_oven()
+            self.game_view.buy(Items.OVEN)
+            self.window.show_view(self.game_view)
+        if key == arcade.key.S:
+            self.game_view.buy(Items.SUPER_OVEN)
             self.window.show_view(self.game_view)
         if key == arcade.key.P:
-            self.game_view.buy_plate_table()
+            self.game_view.buy(Items.PLATE_TABLE)
             self.window.show_view(self.game_view)
