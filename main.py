@@ -43,22 +43,22 @@ class ComuniCook(arcade.View):
     def setup(self):
         self.walls = arcade.SpriteList()
         left_wall = arcade.SpriteSolidColor(
-            10, SCREEN_HEIGHT, arcade.color.BLACK)
+            1, SCREEN_HEIGHT, arcade.color.BLACK)
         left_wall.center_x = 0
         left_wall.center_y = SCREEN_HEIGHT / 2
         self.walls.append(left_wall)
         right_wall = arcade.SpriteSolidColor(
-            10, SCREEN_HEIGHT, arcade.color.BLACK)
+            1, SCREEN_HEIGHT, arcade.color.BLACK)
         right_wall.center_x = SCREEN_WIDTH
         right_wall.center_y = SCREEN_HEIGHT / 2
         self.walls.append(right_wall)
         top_wall = arcade.SpriteSolidColor(
-            SCREEN_WIDTH, 12, arcade.color.BLACK)
+            SCREEN_WIDTH, 1, arcade.color.BLACK)
         top_wall.center_x = SCREEN_WIDTH / 2
         top_wall.center_y = SCREEN_HEIGHT
         self.walls.append(top_wall)
         bottom_wall = arcade.SpriteSolidColor(
-            SCREEN_WIDTH, 12, arcade.color.BLACK)
+            SCREEN_WIDTH, 1, arcade.color.BLACK)
         bottom_wall.center_x = SCREEN_WIDTH / 2
         bottom_wall.center_y = 0
         self.walls.append(bottom_wall)
