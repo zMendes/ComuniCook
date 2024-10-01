@@ -1,10 +1,11 @@
 import random
-
+from utils import tprint
+from constants import INITIAL_COMUNITY_SIZE
 
 class Comunity():
     def __init__(self, restaurant):
         self.people = []
-        for _ in range(random.randint(2, 5)):
+        for _ in range(random.randint(*INITIAL_COMUNITY_SIZE)):
             self.people.append(Person())
         self.happiness = 100
         self.restaurant = restaurant
@@ -35,7 +36,7 @@ class Comunity():
                     1.0, hunger_difference / (current_person.hunger + 20))
 
                 if random.random() < swap_probability:
-                    print(f"Person with hunger {
+                    tprint(f"Person with hunger {
                           current_person.hunger} gets position of person with hunger {next_person.hunger}")
                     queue[i], queue[j] = queue[j], queue[i]
                     return
@@ -50,14 +51,14 @@ class Comunity():
             scaled_chance = max(0, base_chance + ((self.happiness - 50) / 5))
             chance = random.randint(0, 100)
             if chance <= scaled_chance:
-                print("New person joined the community.")
+                tprint("New person joined the community.")
                 # add 5% of the total comunity size or 1 person
                 n = max(1, len(self.people) // 20)
                 for _ in range(n):
                     self.people.append(Person())
 
     def remove_person(self, person):
-        print("Person is leaving the community, whas she on the queue?",
+        tprint("Person is leaving the community, whas she on the queue?",
               person.is_on_queue)
         self.restaurant.remove_from_queue(person)
         self.people.remove(person)
@@ -88,6 +89,8 @@ class Person():
         self.hunger = random.randint(0, 80)
         self.is_on_queue = False
         self.time_since_last_try = 0
+    def __str__(self):
+        return f"Person - {self.hunger} - {self.is_on_queue}"
 
     def eat(self, food):
         self.hunger = max(0, self.hunger - food.nutrition)
@@ -101,7 +104,7 @@ class Person():
             return False
         self.time_since_last_try = 0
         if self.hunger >= 90:
-            print("Person is at their limit, person is joining the queue")
+            tprint("Person is at their limit, person is joining the queue")
             self.is_on_queue = True
             restaurant.add_to_queue(self)
             return True
@@ -111,7 +114,7 @@ class Person():
         join_probability = (self.hunger / 100) * (queue_factor * 0.2)
 
         if random.random() < join_probability:
-            print("Person with hunger", self.hunger,
+            tprint("Person with hunger", self.hunger,
                   "decides to join the queue")
             self.is_on_queue = True
             restaurant.add_to_queue(self)

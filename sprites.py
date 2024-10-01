@@ -57,10 +57,10 @@ class OvenSprite(arcade.Sprite):
     def cook(self, food):
         food.cook()
 
-#Author: Santoniche from open game art
+#from Bluerobin2 on open game art
 class FoodTableSprite(arcade.Sprite):
     def __init__(self):
-        super().__init__("resources/food_table_egg.png")
+        super().__init__("resources/tabletop_egg.png")
         self.center_x = SCREEN_WIDTH - 32
         self.center_y = SCREEN_HEIGHT - 100
         self.change_y = 0
@@ -93,10 +93,10 @@ class Food(arcade.Sprite):
     def update_target(self, target):
         self.target = target
 
-
+#from Bluerobin2 on open game art
 class PlateTableSprite(arcade.Sprite):
     def __init__(self, x, y):
-        super().__init__("resources/table.png")
+        super().__init__("resources/tabletop_plate.png")
         self.center_x = x
         self.center_y = y
         self.change_y = 0

@@ -1,3 +1,4 @@
+from utils import tprint
 class Restaurant:
     def __init__(self, plate_tables):
         self.money = 0
@@ -26,8 +27,9 @@ class Restaurant:
             return
         for plate_table in self.plate_tables:
             if plate_table.has_food():
+                tprint("Top 5 queue:", [str(x) for x in self.get_top_queue()])
                 last_person = self.queue.pop(0)
-                print("Giving food to person with hunger:", last_person.hunger)
+                tprint("Giving food to person with hunger:", last_person.hunger)
                 last_person.eat(plate_table.get_food())
 
     def update(self, delta_time):

@@ -1,13 +1,12 @@
 import arcade
 import arcade.key
-from random import random
 import math
 from sprites import PlayerSprite, OvenSprite, FoodTableSprite, Food, PlateTableSprite
 from constants import *
 from views import MenuView
 from agent import Comunity
 from restaurant import Restaurant
-
+from utils import *
 
 class ComuniCook(arcade.View):
     def __init__(self):
@@ -160,6 +159,7 @@ class ComuniCook(arcade.View):
 
 
 if __name__ == '__main__':
+
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     game_view = ComuniCook()
     window.show_view(game_view)
