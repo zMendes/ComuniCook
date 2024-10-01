@@ -58,6 +58,7 @@ class OvenSprite(arcade.Sprite):
         self.change_y = 0
         self.scale = 1.5
         self.food = None
+        self.oven_speed = 1
         self.isCooking = False
 
     def on_update(self, delta_time):
@@ -71,7 +72,7 @@ class OvenSprite(arcade.Sprite):
         self.isCooking = True
 
     def cooking(self, delta_time):
-        self.time_cooking += delta_time
+        self.time_cooking += delta_time * self.oven_speed
         if self.time_cooking > self.food.time_to_cook:
             self.food.cook()
             self.isCooking = False
