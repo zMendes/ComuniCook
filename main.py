@@ -43,6 +43,7 @@ class ComuniCook(arcade.View):
         self.comunity_text = None
         self.happiness_text = None
         self.queue_text = None
+        self.how_to_text = None
         self.hunger_texts = []
         self.create_UI_texts()
         # others
@@ -105,12 +106,21 @@ class ComuniCook(arcade.View):
             font_size=14
         )
 
+        self.how_to_text = arcade.Text(
+            text="Press SPACE to interact",
+            start_x=SCREEN_WIDTH / 2 -80,
+            start_y=15,
+            color=arcade.color.WHITE,
+            font_size=14
+        )
+
     def draw_UI(self):
         # Draw all UI text objects
         self.money_text.draw()
         self.comunity_text.draw()
         self.happiness_text.draw()
         self.queue_text.draw()
+        self.how_to_text.draw()
         self.draw_hunger()
 
     def draw_hunger(self):
