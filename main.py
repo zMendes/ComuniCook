@@ -229,21 +229,21 @@ class ComuniCook(arcade.View):
                 self.addItem(PlateTable, self.plate_tables)
 
 
-def addItem(self, item, item_list):
-    if len(item_list) > 5:
-        return
-    last_item = item_list[-1]
-    new_x = last_item.center_x
-    new_y = last_item.center_y + 160
+    def addItem(self, item, item_list):
+        if len(item_list) > 5:
+            return
+        last_item = item_list[-1]
+        new_x = last_item.center_x
+        new_y = last_item.center_y + 160
 
-    if new_y > SCREEN_HEIGHT - 100:
-        new_row_item = item_list[len(item_list) - 2 % 3]
-        new_x = new_row_item.center_x + 160
-        new_y = new_row_item.center_y
+        if new_y > SCREEN_HEIGHT - 100:
+            new_row_item = item_list[len(item_list) - 2 % 3]
+            new_x = new_row_item.center_x + 160
+            new_y = new_row_item.center_y
 
-    new_item = item(new_x, new_y)
-    self.entities.append(new_item)
-    item_list.append(new_item)
+        new_item = item(new_x, new_y)
+        self.entities.append(new_item)
+        item_list.append(new_item)
 
 
 if __name__ == '__main__':
