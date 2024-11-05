@@ -37,8 +37,7 @@ class Comunity():
                     1.0, hunger_difference / (current_person.hunger + 20))
 
                 if random.random() < swap_probability:
-                    tprint(f"Person with hunger {
-                           current_person.hunger} gets position of person with hunger {next_person.hunger}")
+                    tprint(f"Person with hunger {int(current_person.hunger)} gets position of person with hunger {int(next_person.hunger)}")
                     queue[i], queue[j] = queue[j], queue[i]
                     return
 

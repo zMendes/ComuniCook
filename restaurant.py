@@ -3,7 +3,7 @@ from utils import tprint, Items
 
 class Restaurant:
     def __init__(self, plate_tables):
-        self.money = 0
+        self.money = 11100
         self.foods = ["egg"]
         self.queue = []
         self.plate_tables = plate_tables
@@ -33,6 +33,8 @@ class Restaurant:
             return
         for plate_table in self.plate_tables:
             if plate_table.has_food():
+                if len(self.queue) < 1:
+                    return
                 last_person = self.queue.pop(0)
                 tprint("Giving food to person with hunger:", last_person.hunger)
                 last_person.eat(plate_table.get_food())
@@ -50,6 +52,10 @@ class Restaurant:
             case Items.PLATE_TABLE:
                 if self.money >= 200:
                     self.money -= 200
+                    return True
+            case Items.ASSISTANT:
+                if self.money >= 1000:
+                    self.money -= 1000
                     return True
         return False
 

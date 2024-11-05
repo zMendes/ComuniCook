@@ -18,6 +18,8 @@ class MenuView(arcade.View):
                          arcade.color.WHITE, 18, anchor_x="center")
         arcade.draw_text("P: Plates -- 200$", self.window.width / 2, self.window.height - 260,
                          arcade.color.WHITE, 18, anchor_x="center")
+        arcade.draw_text("A: Assistant -- 1000$", self.window.width / 2, self.window.height - 290,
+                         arcade.color.WHITE, 18, anchor_x="center")
 
     def on_key_press(self, key, modifiers):
         # Close the menu when the player presses the M key again
@@ -31,4 +33,7 @@ class MenuView(arcade.View):
             self.window.show_view(self.game_view)
         if key == arcade.key.P:
             self.game_view.buy(Items.PLATE_TABLE)
+            self.window.show_view(self.game_view)
+        if key == arcade.key.A:
+            self.game_view.buy(Items.ASSISTANT)
             self.window.show_view(self.game_view)

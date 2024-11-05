@@ -14,6 +14,7 @@ class ComuniCook(arcade.View):
         super().__init__()
         # set up the window
         arcade.set_background_color(arcade.color.GRAY)
+        self.background = arcade.load_texture("resources/background.png")
 
         # set up obj lists
         self.entities = arcade.SpriteList()
@@ -23,6 +24,7 @@ class ComuniCook(arcade.View):
         oven = Oven(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         self.food_table = FoodTable()
         self.player = Player(100)
+        self.assisants = []
         plate_table = PlateTable(50, 70)
         # add objects to lists
         self.entities.append(oven)
@@ -35,6 +37,7 @@ class ComuniCook(arcade.View):
         # Game state
         self.restaurant = Restaurant(self.plate_tables)
         self.comunity = Comunity(self.restaurant)
+        # PLAYER PHYSICS ENGINE
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.player, self.entities)
         self.setup()
@@ -157,6 +160,10 @@ class ComuniCook(arcade.View):
 
     def on_draw(self):
         arcade.start_render()
+
+        arcade.draw_lrwh_rectangle_textured(0, 0,
+                                    SCREEN_WIDTH, SCREEN_HEIGHT,
+                                    self.background)
         self.entities.draw()
         self.foods.draw()
         self.draw_UI()
@@ -227,6 +234,10 @@ class ComuniCook(arcade.View):
                 self.addItem(SuperOven, self.ovens)
             case Items.PLATE_TABLE:
                 self.addItem(PlateTable, self.plate_tables)
+            case Items.ASSISTANT:
+                new_assistant = Assistant(200, [self.food_table], self.ovens, self.plate_tables, self.entities)
+                self.entities.append(new_assistant)
+                self.assisants.append(new_assistant)
 
 
     def addItem(self, item, item_list):
