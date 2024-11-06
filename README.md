@@ -32,6 +32,10 @@ The player can pick up food, cook it, and serve to people in the queue. When som
 
 Players can also open the buy menu (by pressing "M") and use saved money to purchase new equipment.
 
+### Assistants
+
+Assistants can be hired to help you cook and server food for the community.
+
 ## Future Implementations
 
-In future implementations there are plans to add new buying options, such as new types of food and hire assistans to prepare and serve food alongside the player.
+In future implementations there are plans to add new buying options, such as new types of food.
