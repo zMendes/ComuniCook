@@ -37,7 +37,8 @@ class Comunity():
                     1.0, hunger_difference / (current_person.hunger + 20))
 
                 if random.random() < swap_probability:
-                    tprint(f"Person with hunger {int(current_person.hunger)} gets position of person with hunger {int(next_person.hunger)}")
+                    tprint(f"Person with hunger {int(
+                        current_person.hunger)} gets position of person with hunger {int(next_person.hunger)}")
                     queue[i], queue[j] = queue[j], queue[i]
                     return
 
@@ -56,6 +57,12 @@ class Comunity():
                 n = max(1, len(self.people) // 20)
                 for _ in range(n):
                     self.people.append(Person())
+
+    def find_hungry_person(self, threshold=80):
+        for person in self.people:
+            if person.hunger >= threshold:
+                return person
+        return None
 
     def remove_person(self, person):
         tprint("Person is leaving the community")
@@ -91,7 +98,25 @@ class Person():
         self.time_since_last_try = 0
 
     def __str__(self):
-        return f"Person - {self.hunger} - {self.is_on_queue}"
+        return f"Person ({self.hunger:.2f})"
+
+    def receive_food(self, food, community):
+        if self.share_food(community, food):
+            return
+
+        self.eat(food)
+
+    def share_food(self, community, food):
+        if self.hunger < 50:
+            hungry_person = community.find_hungry_person(threshold=80)
+            if hungry_person:
+                shared_nutrition = food.nutrition // 3
+                food.nutrition -= shared_nutrition
+                tprint(f"{self} shares {shared_nutrition} nutrition with {hungry_person}")
+                hungry_person.hunger = max(0, hungry_person.hunger - shared_nutrition)
+                self.eat(food)
+                return True
+        return False
 
     def eat(self, food):
         self.hunger = max(0, self.hunger - food.nutrition)

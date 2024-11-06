@@ -37,7 +37,7 @@ class Restaurant:
                     return
                 last_person = self.queue.pop(0)
                 tprint("Giving food to person with hunger:", last_person.hunger)
-                last_person.eat(plate_table.get_food())
+                last_person.receive_food(plate_table.get_food(), self.community)
 
     def buy(self, item):
         match (item):
