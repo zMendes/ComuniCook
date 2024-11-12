@@ -1,3 +1,5 @@
+from sprites import Character
+import arcade
 import random
 from utils import tprint
 from constants import INITIAL_COMUNITY_SIZE
@@ -91,11 +93,32 @@ class Comunity():
         return len(self.people)
 
 
-class Person():
+class Person(Character):
     def __init__(self):
+        randomize_person = random.randint(0, 30)
+        #make sure it is a string with 3 characters even if its like 001
+        person_tile = f"resources/person/{str(randomize_person).zfill(3)}.png"
+        super().__init__(None, None, person_tile)
         self.hunger = random.randint(0, 80)
         self.is_on_queue = False
         self.time_since_last_try = 0
+        self.texture = arcade.make_circle_texture(10, arcade.color.WHITE)
+        self.x = None
+        self.y = None
+
+    def set_position(self, center_x, center_y):
+        return super().set_position(center_x, center_y)
+
+    def draw_hunger_bar(self):
+        arcade.draw_rectangle_filled(
+            self.x - 10, self.y + 20, 20, 5, arcade.color.RED)
+        arcade.draw_rectangle_filled(
+            self.x - 10, self.y + 20, 20 * (self.hunger / 100), 5, arcade.color.GREEN)
+
+    def draw(self):
+        self.draw_hunger_bar()
+        super().draw()
+
 
     def __str__(self):
         return f"Person ({self.hunger:.2f})"
@@ -123,6 +146,7 @@ class Person():
         food.kill()
         food = None
         self.is_on_queue = False
+
 
     def try_to_join_queue(self, restaurant, delta_time):
         if self.is_on_queue or self.time_since_last_try < 1:

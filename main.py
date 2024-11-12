@@ -35,7 +35,7 @@ class ComuniCook(arcade.View):
         self.plate_tables.append(plate_table)
 
         # Game state
-        self.restaurant = Restaurant(self.plate_tables)
+        self.restaurant = Restaurant(self.plate_tables, self.entities)
         self.comunity = Comunity(self.restaurant)
         # PLAYER PHYSICS ENGINE
         self.physics_engine = arcade.PhysicsEngineSimple(
