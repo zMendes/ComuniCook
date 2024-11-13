@@ -60,7 +60,6 @@ class Restaurant:
             person.set_position(x, y)
             person.is_on_queue = True  # Ensure each person in the queue is marked as such
 
-
     def buy(self, item):
         match (item):
             case Items.OVEN:
