@@ -81,7 +81,7 @@ class ComuniCook(arcade.View):
             text=f"Money: {math.floor(self.restaurant.get_money())}",
             start_x=SCREEN_WIDTH - 120,
             start_y=SCREEN_HEIGHT - 30,
-            color=arcade.color.WHITE,
+            color=arcade.color.GREEN_YELLOW,
             font_size=14
         )
 
@@ -89,7 +89,7 @@ class ComuniCook(arcade.View):
             text=f"Comunity: {self.comunity.get_size()} people",
             start_x=SCREEN_WIDTH - 500,
             start_y=SCREEN_HEIGHT - 30,
-            color=arcade.color.WHITE,
+            color=arcade.color.GREEN_YELLOW,
             font_size=14
         )
 
@@ -97,7 +97,7 @@ class ComuniCook(arcade.View):
             text=f"Happiness: {self.comunity.get_happiness()}",
             start_x=20,
             start_y=SCREEN_HEIGHT - 30,
-            color=arcade.color.WHITE,
+            color=arcade.color.GREEN_YELLOW,
             font_size=14
         )
 
@@ -105,7 +105,7 @@ class ComuniCook(arcade.View):
             text=f"Queue: {self.restaurant.get_queue_size()}",
             start_x=SCREEN_WIDTH / 2,
             start_y=SCREEN_HEIGHT - 30,
-            color=arcade.color.WHITE,
+            color=arcade.color.GREEN_YELLOW,
             font_size=14
         )
 
@@ -113,7 +113,7 @@ class ComuniCook(arcade.View):
             text="Press SPACE to interact",
             start_x=SCREEN_WIDTH / 2 -80,
             start_y=15,
-            color=arcade.color.WHITE,
+            color=arcade.color.GREEN_YELLOW,
             font_size=14
         )
 
@@ -138,7 +138,7 @@ class ComuniCook(arcade.View):
                     text=f"{i+1}: {math.floor(person.hunger)}",
                     start_x=20,
                     start_y=SCREEN_HEIGHT - 60 - i * 30,
-                    color=arcade.color.WHITE,
+                    color=arcade.color.GREEN_YELLOW,
                     font_size=14
                 )
                 self.hunger_texts.append(hunger_text)

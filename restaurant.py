@@ -3,7 +3,7 @@ from utils import tprint, Items
 
 class Restaurant:
     def __init__(self, plate_tables, entities):
-        self.money = 11100
+        self.money = 600
         self.foods = ["egg"]
         self.queue = []
         self.plate_tables = plate_tables

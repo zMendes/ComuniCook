@@ -6,10 +6,13 @@ from utils import Items
 class MenuView(arcade.View):
     def __init__(self, game_view):
         super().__init__()
+        self.background = arcade.load_texture("resources/init_background.png")
         self.game_view = game_view  # Save reference to the game view
 
     def on_draw(self):
         arcade.start_render()
+        arcade.draw_lrwh_rectangle_textured(
+            0, 0, self.window.width, self.window.height, self.background)
         arcade.draw_text("Buy Items Menu", self.window.width / 2, self.window.height - 50,
                          arcade.color.WHITE, 24, anchor_x="center")
         arcade.draw_text("O: Oven -- 100$", self.window.width / 2, self.window.height - 200,
