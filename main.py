@@ -3,7 +3,7 @@ import arcade.key
 import math
 from sprites import *
 from constants import *
-from views import MenuView
+from views import MenuView, InitView
 from agent import Comunity
 from restaurant import Restaurant
 from utils import *
@@ -261,5 +261,6 @@ if __name__ == '__main__':
 
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     game_view = ComuniCook()
-    window.show_view(game_view)
+    init_view = InitView(game_view)
+    window.show_view(init_view)
     arcade.run()
